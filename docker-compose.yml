@@ -1,6 +1,15 @@
 version: '3'
 
 services:
+  oz-map-node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oz-map-node
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
   # MongoDB
   mongodb:
     image: mongo:latest
