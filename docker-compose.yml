@@ -1,15 +1,6 @@
-version: '3'
+version: '3.8'
 
 services:
-  oz-map-node:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: oz-map-node
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/usr/src/app
   # MongoDB
   mongodb:
     image: mongo:latest
@@ -17,6 +8,8 @@ services:
     restart: always
     ports:
       - "27017:27017"
+    networks:
+      - my_network
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -28,7 +21,13 @@ services:
     restart: always
     ports:
       - "8081:8081"
+    networks:
+      - my_network
     environment:
       ME_CONFIG_MONGODB_SERVER: mongodb
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
+networks:
+  my_network:
+    name: global
