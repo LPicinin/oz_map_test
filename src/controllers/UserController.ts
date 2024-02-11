@@ -1,22 +1,31 @@
 import { Request, Response } from "express";
-import { User, UserModel } from "../models/User";
-import { STATUS } from "../utils";
+import { User, UserModel } from "../models/Models";
+import HttpStatusCode from "../utils";
 
 export const UserController = {
   async list(req: Request, res: Response) {
-    const { page, limit } = req.query;
+    const { page = 1, limit = 10 } = req.query;
+    const parsedPage = parseInt(page as string, 10);
+    const parsedLimit = parseInt(limit as string, 10);
 
-    const [users, total] = await Promise.all([
-      UserModel.find().lean(),
-      UserModel.count(),
-    ]);
+    try {
+      const skip = (parsedPage - 1) * parsedLimit;
+      const [users, total] = await Promise.all([
+        UserModel.find().skip(skip).limit(parsedLimit).lean(),
+        UserModel.countDocuments(),
+      ]);
 
-    return res.json({
-      rows: users,
-      page,
-      limit,
-      total,
-    });
+      return res.json({
+        rows: users,
+        page,
+        limit,
+        total,
+      });
+    } catch (error) {
+      return res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: "Intenral server error when found Users" });
+    }
   },
 
   async create(req: Request, res: Response) {
@@ -31,9 +40,11 @@ export const UserController = {
       });
 
       await user.save();
-      return res.status(STATUS.CREATED).json(user);
+      return res.status(HttpStatusCode.CREATED).json(user);
     } catch (err) {
-      return res.status(STATUS.BAD_REQUEST).json({ message: err.message });
+      return res
+        .status(HttpStatusCode.BAD_REQUEST)
+        .json({ message: err.message });
     }
   },
 
@@ -44,7 +55,7 @@ export const UserController = {
     const user = await UserModel.findOne({ _id: id });
 
     if (!user) {
-      res.status(STATUS.DEFAULT_ERROR).json({ message: "User not found" });
+      res.status(HttpStatusCode.NOT_FOUND).json({ message: "User not found" });
     }
 
     user.name = name;
@@ -54,7 +65,7 @@ export const UserController = {
     user.regions = regions;
 
     await user.save();
-    return res.status(STATUS.UPDATED).json(user);
+    return res.status(HttpStatusCode.OK).json(user);
   },
 
   async delete(req: Request, res: Response) {
@@ -62,16 +73,20 @@ export const UserController = {
     const user = await UserModel.findById(id);
     if (user) {
       await user.deleteOne();
-      res.status(STATUS.OK).json(user);
+      res.status(HttpStatusCode.OK).json(user);
     } else
-      res.status(STATUS.NOT_FOUND).json({ message: "Usuário não encontrado" });
+      res
+        .status(HttpStatusCode.NOT_FOUND)
+        .json({ message: "Usuário não encontrado" });
   },
 
   async show(req: Request, res: Response) {
     const { id } = req.params;
     const user = await UserModel.findById(id);
-    if (user) res.status(STATUS.OK).json(user);
+    if (user) res.status(HttpStatusCode.OK).json(user);
     else
-      res.status(STATUS.NOT_FOUND).json({ message: "Usuário não encontrado" });
+      res
+        .status(HttpStatusCode.NOT_FOUND)
+        .json({ message: "Usuário não encontrado" });
   },
 };
