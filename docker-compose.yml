@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  #backend
+  oz-map-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oz-map-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+    volumes:
+      - .:/usr/src/app
   # MongoDB
   mongodb:
     image: mongo:latest
@@ -31,3 +43,4 @@ services:
 networks:
   my_network:
     name: global
+    driver: bridge

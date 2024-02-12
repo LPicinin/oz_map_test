@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const env = {
-  MONGO_URI: 'mongodb://root:example@localhost:27017/oz-tech-test?authSource=admin',
+  MONGO_URI: 'mongodb://root:example@mongodb:27017/oz-tech-test?authSource=admin',
 };
 
 const init = async function() {
