@@ -30,13 +30,14 @@ export const UserController = {
 
   async create(req: Request, res: Response) {
     try {
-      const { name, email, address, coordinates, regions } = req.body;
+      const { name, email, address, coordinates, regions, password } = req.body;
       const user = new UserModel({
         name,
         email,
         address,
         coordinates,
         regions,
+        password,
       });
 
       await user.save();
@@ -50,7 +51,7 @@ export const UserController = {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const { name, email, address, coordinates, regions } = req.body;
+    const { name, email, address, coordinates, regions, password } = req.body;
 
     const user = await UserModel.findOne({ _id: id });
 
@@ -63,6 +64,7 @@ export const UserController = {
     user.address = address;
     user.coordinates = coordinates;
     user.regions = regions;
+    user.password = password;
 
     await user.save();
     return res.status(HttpStatusCode.OK).json(user);

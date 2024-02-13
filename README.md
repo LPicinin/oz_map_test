@@ -87,3 +87,15 @@ Estamos ansiosos para ver sua implementação e criatividade em ação! Boa sort
 
 -------------------------------------------
 
+#backend
+  oz-map-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oz-map-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+    volumes:
+      - .:/usr/src/app
