@@ -7,6 +7,7 @@ import {
   Prop,
   Ref,
   modelOptions,
+  index,
 } from "@typegoose/typegoose";
 import lib from "../lib";
 
@@ -76,7 +77,7 @@ export class Region extends Base {
   name!: string;
 
   @Prop({ required: true, type: () => Array<[Number, Number]> }) // Polígono em GeoJSON
-  coordinates!: Array<[Number, Number]>;
+  coordinates!: Array<[number, number]>;
 
   @Prop({ ref: () => User, required: true, type: () => String })
   user: Ref<User>;

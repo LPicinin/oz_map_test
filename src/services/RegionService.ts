@@ -1,21 +1,24 @@
 export const RegionService = {
-  pontoDentroDoPoligono(
+  pontoProximo(
     ponto: [number, number],
-    poligono: Array<[number, number]>
+    poligono: Array<[number, number]>,
+    distanciaMaxima: number
   ) {
-    let x = ponto[0],
-      y = ponto[1];
-    let dentro = false;
-    for (let i = 0, j = poligono.length - 1; i < poligono.length; j = i++) {
-      let xi = poligono[i][0],
-        yi = poligono[i][1];
-      let xj = poligono[j][0],
-        yj = poligono[j][1];
+    let flag = false;
+    poligono.forEach((item) => {
+      if (
+        calcularDistancia(ponto[0], ponto[1], item[0], item[1]) <=
+        distanciaMaxima
+      )
+        flag = true;
+    });
 
-      let intersecta =
-        yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-      if (intersecta) dentro = !dentro;
-    }
-    return dentro;
+    return flag;
   },
 };
+
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+  const dx = lat2 - lat1;
+  const dy = lon2 - lon1;
+  return Math.sqrt(dx * dx + dy * dy);
+}

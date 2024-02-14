@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Region, RegionModel, UserModel } from "../models/Models";
 import HttpStatusCode from "../utils";
+import { RegionService } from "../services/RegionService";
 
 export const RegionController = {
   async list(req: Request, res: Response) {
@@ -130,7 +131,7 @@ export const RegionController = {
 
   async findRegionsNearPoint(req: Request, res: Response) {
     const { latitude, longitude, distance, userId } = req.query;
-
+    
     try {
       // Converter latitude, longitude e distância para números
       const lat = parseFloat(latitude as string);
@@ -150,13 +151,19 @@ export const RegionController = {
         },
       };
 
-      // Adicionar filtro para usuário, se fornecido
+      const user = await UserModel.findById(userId);
+
+      if (!user)
+        return res.status(404).json({ mensagem: "Usuário não encontrado" });
+
       if (userId) {
         query.userId = userId;
       }
 
       // Executar a consulta
-      const regions = await RegionModel.find(query);
+      const regions = (await RegionModel.find({user: user})).filter(item => {
+        return RegionService.pontoProximo([lat, lng], item.coordinates, dist);
+      });
 
       return res.json({
         regions,
