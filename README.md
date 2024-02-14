@@ -80,3 +80,22 @@ Em um mundo conectado e globalizado, a geolocalização se torna cada vez mais e
 ---
 
 Estamos ansiosos para ver sua implementação e criatividade em ação! Boa sorte e que a força do código esteja com você! 🚀
+
+
+
+
+
+-------------------------------------------
+
+#backend
+  oz-map-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oz-map-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+    volumes:
+      - .:/usr/src/app

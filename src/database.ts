@@ -5,11 +5,14 @@ const env = {
 };
 
 const init = async function() {
-  console.log("iniciando conexão com o banco");
   await mongoose.connect(env.MONGO_URI);
-  console.log("Banco conectado");
 };
 
 export default init();
 
 //localhost:27017
+//mongodb:27017
+
+
+//docker-compose up -d
+//docker-compose down
