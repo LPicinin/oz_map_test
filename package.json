@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "test": "mocha --require ts-node/register ./src/**/*.spec.ts --exit",
-    "test2": "mocha --require ts-node/register './src/tests/**/*.test.ts'"
+    "unit-tests": "mocha --require ts-node/register './src/tests/**/*.test.ts'"
   },
   "author": "",
   "license": "ISC",

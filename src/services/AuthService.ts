@@ -11,15 +11,28 @@ export const AuthService = {
   },
 
   async generateToken(user: User, expiresIn: string) {
-    const payload = {name: user.name, _id: user._id};
+    const payload = { name: user.name, _id: user._id };
     return jwt.sign(payload, process.env.SECRET_JWT);
+  },
+
+  async verifyToken(token) {
+    try {
+      return jwt.verify(
+        token,
+        process.env.JWT_SECRET ?? "lkjasfhgclasfafsdbsa6fd54b6"
+      );
+    } catch (error) {
+      return null;
+    }
   },
 
   async generateHash(password) {
     return crypto
-      .createHmac("sha256", process.env.SECRET_JWT ?? 'lkjasfhgclasfafsdbsa6fd54b6')
+      .createHmac(
+        "sha256",
+        process.env.SECRET_JWT ?? "lkjasfhgclasfafsdbsa6fd54b6"
+      )
       .update(password)
       .digest("hex");
   },
 };
-

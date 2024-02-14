@@ -75,8 +75,8 @@ export class Region extends Base {
   @Prop({ required: true })
   name!: string;
 
-  @Prop({ required: true, type: () => [[[Number]]] }) // Polígono em GeoJSON
-  coordinates!: [[[number, number]]];
+  @Prop({ required: true, type: () => Array<[Number, Number]> }) // Polígono em GeoJSON
+  coordinates!: Array<[Number, Number]>;
 
   @Prop({ ref: () => User, required: true, type: () => String })
   user: Ref<User>;

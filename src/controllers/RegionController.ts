@@ -103,6 +103,7 @@ export const RegionController = {
 
   async findRegionsContainingPoint(req: Request, res: Response) {
     const { latitude, longitude } = req.query;
+
     try {
       // Converta latitude e longitude para números
       const lat = parseFloat(latitude as string);
@@ -110,17 +111,14 @@ export const RegionController = {
 
       // Execute a consulta espacial
       const regions = await RegionModel.find({
-        geometry: {
+        coordinates: {
           $geoIntersects: {
-            $geometry: {
-              type: "Point",
-              coordinates: [lat, lng], // A ordem é [longitude, latitude]
-            },
+            $geometry: { type: "Point", coordinates: [lat, lng] },
           },
         },
       });
 
-      return res.json({
+      return res.status(HttpStatusCode.OK).json({
         regions,
       });
     } catch (error) {
@@ -145,7 +143,7 @@ export const RegionController = {
           $near: {
             $geometry: {
               type: "Point",
-              coordinates: [lng, lat],
+              coordinates: [lat, lng],
             },
             $maxDistance: dist,
           },
